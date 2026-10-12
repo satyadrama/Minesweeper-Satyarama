@@ -1,0 +1,66 @@
+<!doctype html>
+<html>
+<head>
+  <title>Minesweeper</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <h1>Minesweeper</h1>
+
+  <form method="post" action="{{ url_for('new_game') }}">
+    <label>
+      Bombs:
+      <input type="number" name="bombs" min="0" max="99" value="{{ board.mine_count }}">
+    </label>
+    <button type="submit">Play</button>
+  </form>
+
+  {% if board.game_over %}
+    <p class="status lose">Anda menggali bom. Game over.</p>
+  {% elif board.won %}
+    <p class="status win">Anda menang!</p>
+  {% else %}
+    <p class="status">Klik sebuah tile.</p>
+  {% endif %}
+
+  <div class="board">
+    {% for r in range(board.size) %}
+      {% for c in range(board.size) %}
+
+        <form method="post" action="{{ url_for('play') }}" class="cell-form">
+          <input type="hidden" name="r" value="{{ r }}">
+          <input type="hidden" name="c" value="{{ c }}">
+          <input type="hidden" name="action" value="reveal">
+          
+          <button type="submit" class="cell {% if board.revealed[r][c] %}revealed{% endif %} {% if board.flagged[r][c] %}flagged{% endif %}"
+          {% if board.revealed[r][c] or board.game_over or board.won %}disabled{% endif %}>
+            {% if board.revealed[r][c] %}
+              {% if board.mines[r][c] %}💣
+              {% elif board.numbers[r][c] == 0 %}&nbsp;
+              {% else %}<span class="n{{ board.numbers[r][c] }}">{{ board.numbers[r][c] }}</span>
+              {% endif %}
+            {% elif board.flagged[r][c] %}
+              🚩
+            {% else %}
+              
+            {% endif %}
+          </button>
+        </form>
+      {% endfor %}
+    {% endfor %}
+  </div>
+</body>
+</html>
+
+<script>
+  //replace default right-click action with flag method
+  document.querySelectorAll('.cell-form').forEach(form => {
+    const button = form.querySelector('.cell');
+    button.addEventListener('contextmenu', (e) => {
+      e.preventDefault();
+      if (button.disabled) return;
+      form.querySelector('input[name="action"]').value = 'flag';
+      form.submit();
+    });
+  });
+</script>
