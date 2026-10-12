@@ -39,4 +39,4 @@ def reset():
     session.pop("board", None)
     return redirect(url_for("index"))
 
-app.run(debug=True)
+app.run()
