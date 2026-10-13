@@ -1,0 +1,14 @@
+{
+    "builds": [
+        {
+            "src": "minesweeper.py",
+            "use": "@vercel/python"
+        }
+    ],
+    "routes": [
+        {
+            "src": "/(.*)",
+            "dest": "/minesweeper.py"
+        }
+    ]
+}
