@@ -39,6 +39,6 @@ def reset():
     session.pop("board", None)
     return redirect(url_for("index"))
 
-if __name__ == "__main__":
-    app.run()
+if _name_ == "_main_":
 app.run()
+    app.run()
