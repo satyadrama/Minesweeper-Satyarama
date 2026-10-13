@@ -40,5 +40,4 @@ def reset():
     return redirect(url_for("index"))
 
 if _name_ == "_main_":
-app.run()
     app.run()
